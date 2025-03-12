@@ -1,0 +1,19 @@
+﻿services:
+  cart-service:
+    image: cart-service
+    build:
+      context: .
+      dockerfile: cart-service/Dockerfile
+  cart-service-db:
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./cart-service/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - cart-service-db-data:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+volumes:
+  cart-service-db-data:
