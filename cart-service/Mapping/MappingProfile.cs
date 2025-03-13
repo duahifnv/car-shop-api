@@ -8,8 +8,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Product, ProductDto>();
-        CreateMap<CreateProductDto, Product>();
-        CreateMap<UpdateProductDto, Product>();
+        CreateMap<Product, ProductResponse>();
+        CreateMap<ProductRequest, Product>();
+        CreateMap<ProductResponse, Product>();
+        CreateMap<CategoryRequest, Category>();
     }
 }
