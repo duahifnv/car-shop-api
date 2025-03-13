@@ -18,7 +18,9 @@ public class CartRepository : ICartRepository
             .Include(ci => ci.Product)
             .Where(ci => ci.UserEmail == userEmail)
             .ToListAsync();
-
+        
+        if (items == null || !items.Any()) return null;
+        
         return new Cart { UserEmail = userEmail, Items = items };
     }
 
@@ -59,7 +61,6 @@ public class CartRepository : ICartRepository
         await _context.SaveChangesAsync();
     }
 
-    // Реализация новых методов
     public async Task<Product> GetProductByIdAsync(int productId)
     {
         return await _context.Products.FindAsync(productId);

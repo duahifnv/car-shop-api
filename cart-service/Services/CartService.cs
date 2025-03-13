@@ -14,11 +14,11 @@ public class CartService
         _mapper = mapper;
     }
 
-    public async Task<Cart> GetCartAsync(string userEmail)
+    public async Task<CartDto> GetCartAsync(string userEmail)
     {
         var cart = await _repository.GetCartAsync(userEmail);
-        if (cart == null) throw new Exception("Cart not found");
-        return _mapper.Map<Cart>(cart);
+        if (cart == null) return null;
+        return _mapper.Map<CartDto>(cart);
     }
 
     public async Task AddToCartAsync(string userEmail, CartItemDto cartItemDto)

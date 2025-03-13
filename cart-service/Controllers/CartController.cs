@@ -1,22 +1,28 @@
 ﻿using cart_service.Dto;
-using cart_service.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cart_service.Controllers;
-
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cart")]
 public class CartController : ControllerBase
 {
     private readonly CartService _service;
 
-    public CartController(CartService service) => _service = service;
+    public CartController(CartService service)
+    {
+        _service = service;
+    }
 
     [HttpGet("{userEmail}")]
     public async Task<ActionResult<CartDto>> GetCart(string userEmail)
     {
         var cart = await _service.GetCartAsync(userEmail);
-        return cart != null ? Ok(cart) : NotFound();
+
+        if (cart == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(cart);
     }
 
     [HttpPost("{userEmail}/items")]
@@ -29,7 +35,11 @@ public class CartController : ControllerBase
         }
         catch (Exception ex) when (ex.Message == "Product not found")
         {
-            return NotFound();
+            return BadRequest("Product not found");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while adding the item to the cart.");
         }
     }
 
@@ -45,6 +55,10 @@ public class CartController : ControllerBase
         {
             return NotFound();
         }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while removing the item from the cart.");
+        }
     }
 
     [HttpDelete("{userEmail}")]
@@ -58,6 +72,10 @@ public class CartController : ControllerBase
         catch (Exception ex) when (ex.Message == "Cart not found")
         {
             return NotFound();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while clearing the cart.");
         }
     }
 }
