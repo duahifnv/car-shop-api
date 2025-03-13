@@ -12,5 +12,11 @@ public class MappingProfile : Profile
         CreateMap<ProductRequest, Product>();
         CreateMap<ProductResponse, Product>();
         CreateMap<CategoryRequest, Category>();
+        // Маппинг для CartItem
+        CreateMap<CartItem, CartItemDto>();
+        CreateMap<CartItemDto, CartItem>();
+        // Маппинг для Cart
+        CreateMap<Cart, CartDto>();
+        CreateMap<CartDto, Cart>();
     }
 }
