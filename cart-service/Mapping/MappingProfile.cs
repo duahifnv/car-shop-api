@@ -16,7 +16,7 @@ public class MappingProfile : Profile
         CreateMap<CartItem, CartItemDto>();
         CreateMap<CartItemDto, CartItem>();
         // Маппинг для Cart
-        CreateMap<Cart, CartDto>();
-        CreateMap<CartDto, Cart>();
+        CreateMap<Cart, CartResponse>();
+        CreateMap<CartResponse, Cart>();
     }
 }
