@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
     public DbSet<CartItem> CartItems { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CartItem>()
+            .HasKey(ci => new { ci.UserEmail, ci.ProductId });
         modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany()
