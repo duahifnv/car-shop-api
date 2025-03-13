@@ -1,38 +1,52 @@
-﻿using cart_service.Data;
+﻿using AutoMapper;
 using cart_service.Dto;
 using cart_service.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
-namespace cart_service.Services;
+using cart_service.Repositories;
 
 public class ProductService
 {
-    private readonly AppDbContext _context;
-    public ProductService(AppDbContext context) => _context = context;
+    private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
 
-    public async Task<List<Product>> GetAllProductsAsync() =>
-        await _context.Products.ToListAsync();
-
-    public async Task<Product> GetProductByIdAsync(int id) => 
-        await _context.Products.FindAsync(id);
-
-    public async Task<EntityEntry<Product>> CreateProductAsync(ProductDto productDto)
+    public ProductService(IProductRepository repository, IMapper mapper)
     {
-        var product = new Product()
-        {
-            Name = productDto.Name,
-            Description = productDto.Description,
-            Price = productDto.Price,
-            StockQuantity = productDto.StockQuantity,
-            CategoryId = productDto.CategoryId
-        };
-        return await _context.Products.AddAsync(product);
+        _repository = repository;
+        _mapper = mapper;
     }
-    
-    public async Task UpdateProductAsync(Product product) => 
-        _context.Products.Update(product);
 
-    public async Task DeleteProductAsync(int id) => 
-        _context.Products.Remove(await GetProductByIdAsync(id));
+    public async Task<List<ProductDto>> GetAllProductsAsync()
+    {
+        var products = await _repository.GetAllAsync();
+        return _mapper.Map<List<ProductDto>>(products);
+    }
+
+    public async Task<ProductDto> GetProductByIdAsync(int id)
+    {
+        var product = await _repository.GetByIdAsync(id);
+        return _mapper.Map<ProductDto>(product);
+    }
+
+    public async Task<ProductDto> CreateProductAsync(CreateProductDto createProductDto)
+    {
+        var product = _mapper.Map<Product>(createProductDto);
+        await _repository.AddAsync(product);
+        await _repository.SaveChangesAsync();
+        return _mapper.Map<ProductDto>(product);
+    }
+
+    public async Task UpdateProductAsync(int id, UpdateProductDto updateProductDto)
+    {
+        var product = await _repository.GetByIdAsync(id);
+        if (product == null) throw new Exception("Product not found");
+
+        _mapper.Map(updateProductDto, product);
+        await _repository.UpdateAsync(product);
+        await _repository.SaveChangesAsync();
+    }
+
+    public async Task DeleteProductAsync(int id)
+    {
+        await _repository.DeleteAsync(id);
+        await _repository.SaveChangesAsync();
+    }
 }
