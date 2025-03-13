@@ -13,7 +13,7 @@ public class CartController : ControllerBase
     }
 
     [HttpGet("{userEmail}")]
-    public async Task<ActionResult<CartDto>> GetCart(string userEmail)
+    public async Task<ActionResult<CartResponse>> GetCart(string userEmail)
     {
         var cart = await _service.GetCartAsync(userEmail);
 
@@ -43,7 +43,7 @@ public class CartController : ControllerBase
         }
     }
 
-    [HttpDelete("{userEmail}/items/{productId}")]
+    [HttpDelete("{userEmail}/items/{productId:int}")]
     public async Task<IActionResult> RemoveItem(string userEmail, int productId)
     {
         try

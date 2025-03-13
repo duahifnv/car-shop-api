@@ -23,7 +23,7 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Category>> GetById(int id)
     {
         var category = await _service.GetCategoryByIdAsync(id);
@@ -44,7 +44,7 @@ public class CategoriesController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, CategoryRequest categoryRequest)
     {
         try
@@ -62,7 +62,7 @@ public class CategoriesController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         try

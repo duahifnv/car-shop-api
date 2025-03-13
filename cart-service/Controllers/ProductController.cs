@@ -12,7 +12,7 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductResponse>>> GetAll() => Ok(await _service.GetAllProductsAsync());
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductResponse>> GetById(int id)
     {
         var product = await _service.GetProductByIdAsync(id);
@@ -37,7 +37,7 @@ public class ProductsController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, ProductRequest productRequest)
     {
         try
@@ -59,7 +59,7 @@ public class ProductsController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         try
