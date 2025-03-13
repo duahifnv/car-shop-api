@@ -65,7 +65,7 @@ namespace cart_service.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("cart_service.Models.Product", b =>

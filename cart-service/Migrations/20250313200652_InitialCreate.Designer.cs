@@ -12,8 +12,8 @@ using cart_service.Data;
 namespace cart_service.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250312152708_AddCategoryEntity")]
-    partial class AddCategoryEntity
+    [Migration("20250313200652_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

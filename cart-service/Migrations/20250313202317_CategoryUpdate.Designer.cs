@@ -12,8 +12,8 @@ using cart_service.Data;
 namespace cart_service.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250312140051_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250313202317_CategoryUpdate")]
+    partial class CategoryUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,27 @@ namespace cart_service.Migrations
                     b.ToTable("CartItems");
                 });
 
+            modelBuilder.Entity("cart_service.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("cart_service.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -58,9 +79,8 @@ namespace cart_service.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -81,6 +101,8 @@ namespace cart_service.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
                 });
 
@@ -93,6 +115,17 @@ namespace cart_service.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("cart_service.Models.Product", b =>
+                {
+                    b.HasOne("cart_service.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
