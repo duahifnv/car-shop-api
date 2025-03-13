@@ -1,30 +1,38 @@
 ﻿using cart_service.Data;
+using cart_service.Dto;
 using cart_service.Models;
-using cart_service.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace cart_service.Services;
 
 public class ProductService
 {
-    private readonly IProductRepository _productRepository;
-    
-    public ProductService(IProductRepository productRepository) => 
-        _productRepository = productRepository;
+    private readonly AppDbContext _context;
+    public ProductService(AppDbContext context) => _context = context;
 
-    public async Task<List<Product>> GetAllProductsAsync() => 
-        await _productRepository.GetAllAsync();
+    public async Task<List<Product>> GetAllProductsAsync() =>
+        await _context.Products.ToListAsync();
 
     public async Task<Product> GetProductByIdAsync(int id) => 
-        await _productRepository.GetByIdAsync(id);
-    
-    public async Task CreateProductAsync(Product product) =>
-        await _productRepository.AddAsync(product);
+        await _context.Products.FindAsync(id);
+
+    public async Task<EntityEntry<Product>> CreateProductAsync(ProductDto productDto)
+    {
+        var product = new Product()
+        {
+            Name = productDto.Name,
+            Description = productDto.Description,
+            Price = productDto.Price,
+            StockQuantity = productDto.StockQuantity,
+            CategoryId = productDto.CategoryId
+        };
+        return await _context.Products.AddAsync(product);
+    }
     
     public async Task UpdateProductAsync(Product product) => 
-        await _productRepository.UpdateAsync(product);
+        _context.Products.Update(product);
 
-    public async Task DeleteProductAsync(int id)
-    {
-        await _productRepository.DeleteAsync(id);
-    } 
+    public async Task DeleteProductAsync(int id) => 
+        _context.Products.Remove(await GetProductByIdAsync(id));
 }
