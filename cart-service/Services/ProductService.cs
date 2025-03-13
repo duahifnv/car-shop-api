@@ -18,46 +18,46 @@ public class ProductService
         _context = context;
     }
 
-    public async Task<List<ProductDto>> GetAllProductsAsync()
+    public async Task<List<ProductResponse>> GetAllProductsAsync()
     {
         var products = await _repository.GetAllAsync();
-        return _mapper.Map<List<ProductDto>>(products);
+        return _mapper.Map<List<ProductResponse>>(products);
     }
 
-    public async Task<ProductDto> GetProductByIdAsync(int id)
+    public async Task<ProductResponse> GetProductByIdAsync(int id)
     {
         var product = await _repository.GetByIdAsync(id);
-        return _mapper.Map<ProductDto>(product);
+        return _mapper.Map<ProductResponse>(product);
     }
 
-    public async Task<ProductDto> CreateProductAsync(CreateProductDto createProductDto)
+    public async Task<ProductResponse> CreateProductAsync(ProductRequest productRequest)
     {
         // Проверяем, существует ли категория
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == createProductDto.CategoryId);
+        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == productRequest.CategoryId);
         if (!categoryExists)
         {
             throw new Exception("Category not found");
         }
 
-        var product = _mapper.Map<Product>(createProductDto);
+        var product = _mapper.Map<Product>(productRequest);
         await _repository.AddAsync(product);
         await _repository.SaveChangesAsync();
-        return _mapper.Map<ProductDto>(product);
+        return _mapper.Map<ProductResponse>(product);
     }
 
-    public async Task UpdateProductAsync(int id, UpdateProductDto updateProductDto)
+    public async Task UpdateProductAsync(int id, ProductRequest productRequest)
     {
         var product = await _repository.GetByIdAsync(id);
         if (product == null) throw new Exception("Product not found");
 
         // Проверяем, существует ли категория
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == updateProductDto.CategoryId);
+        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == productRequest.CategoryId);
         if (!categoryExists)
         {
             throw new Exception("Category not found");
         }
 
-        _mapper.Map(updateProductDto, product);
+        _mapper.Map(productRequest, product);
         await _repository.UpdateAsync(product);
         await _repository.SaveChangesAsync();
     }

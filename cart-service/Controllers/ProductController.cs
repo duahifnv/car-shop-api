@@ -10,21 +10,21 @@ public class ProductsController : ControllerBase
     public ProductsController(ProductService service) => _service = service;
 
     [HttpGet]
-    public async Task<ActionResult<List<ProductDto>>> GetAll() => Ok(await _service.GetAllProductsAsync());
+    public async Task<ActionResult<List<ProductResponse>>> GetAll() => Ok(await _service.GetAllProductsAsync());
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDto>> GetById(int id)
+    public async Task<ActionResult<ProductResponse>> GetById(int id)
     {
         var product = await _service.GetProductByIdAsync(id);
         return product != null ? Ok(product) : NotFound();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateProductDto createProductDto)
+    public async Task<IActionResult> Create(ProductRequest productRequest)
     {
         try
         {
-            var productDto = await _service.CreateProductAsync(createProductDto);
+            var productDto = await _service.CreateProductAsync(productRequest);
             return CreatedAtAction(nameof(GetById), new { id = productDto.Id }, productDto);
         }
         catch (Exception ex) when (ex.Message == "Category not found")
@@ -38,11 +38,11 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UpdateProductDto updateProductDto)
+    public async Task<IActionResult> Update(int id, ProductRequest productRequest)
     {
         try
         {
-            await _service.UpdateProductAsync(id, updateProductDto);
+            await _service.UpdateProductAsync(id, productRequest);
             return NoContent();
         }
         catch (Exception ex) when (ex.Message == "Product not found")

@@ -1,6 +1,6 @@
 ﻿namespace cart_service.Dto;
 
-public class CreateProductDto
+public class ProductRequest
 {
     public string Name { get; set; }
     public string Description { get; set; }
