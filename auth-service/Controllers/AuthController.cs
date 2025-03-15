@@ -28,9 +28,8 @@ public class AuthController : ControllerBase
         }
     }
     
-    // [Authorize("AdminOnly")]
-    [HttpGet("user")]
-    public async Task<IActionResult> GetUser([FromHeader(Name = "Authorization")] string token)
+    [HttpGet("profile")]
+    public async Task<IActionResult> GetProfile([FromHeader(Name = "Authorization")] string token)
     {
         try
         {
