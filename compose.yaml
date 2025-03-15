@@ -1,10 +1,16 @@
 ﻿services:
   cart-service:
+    container_name: cart-service
     image: cart-service
     build:
       context: .
       dockerfile: cart-service/Dockerfile
+    depends_on:
+      - cart-service-db
+    ports:
+      - "8080:8080"
   cart-service-db:
+    container_name: cart-service-db
     image: postgres:17.2
     environment:
       POSTGRES_USER: postgres
