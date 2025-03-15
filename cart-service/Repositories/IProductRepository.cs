@@ -10,4 +10,5 @@ public interface IProductRepository
     Task UpdateAsync(Product product);
     Task DeleteAsync(int id);
     Task SaveChangesAsync();
+    Task UpdateStockQuantityAsync(int productId, int quantity);
 }

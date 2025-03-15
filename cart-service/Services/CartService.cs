@@ -25,7 +25,10 @@ public class CartService
     {
         var product = await _repository.GetProductByIdAsync(cartItemDto.ProductId);
         if (product == null) throw new Exception("Product not found");
-
+        if (product.StockQuantity < cartItemDto.Quantity)
+        {
+            throw new Exception("Not enough stock available");
+        }
         var cartItem = _mapper.Map<CartItem>(cartItemDto);
         await _repository.AddOrUpdateItemAsync(userEmail, cartItem);
     }

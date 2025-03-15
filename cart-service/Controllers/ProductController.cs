@@ -58,7 +58,29 @@ public class ProductsController : ControllerBase
             return StatusCode(500, "An error occurred while updating the product.");
         }
     }
-
+    
+    [HttpPatch("{id:int}/stock")]
+    public async Task<IActionResult> UpdateStockQuantity(int id, [FromQuery] int quantity)
+    {
+        try
+        {
+            await _service.UpdateStockQuantityAsync(id, quantity);
+            return NoContent();
+        }
+        catch (Exception ex) when (ex.Message == "Product not found")
+        {
+            return NotFound();
+        }
+        catch (Exception ex) when (ex.Message == "Quantity cannot be negative")
+        {
+            return BadRequest("Quantity cannot be negative");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while updating the stock quantity.");
+        }
+    }
+    
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

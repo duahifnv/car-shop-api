@@ -61,7 +61,11 @@ public class ProductService
         await _repository.UpdateAsync(product);
         await _repository.SaveChangesAsync();
     }
-
+    public async Task UpdateStockQuantityAsync(int productId, int quantity)
+    {
+        if (quantity < 0) throw new Exception("Quantity cannot be negative");
+        await _repository.UpdateStockQuantityAsync(productId, quantity);
+    }
     public async Task DeleteProductAsync(int id)
     {
         var product = await _repository.GetByIdAsync(id);

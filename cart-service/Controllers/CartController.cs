@@ -37,6 +37,10 @@ public class CartController : ControllerBase
         {
             return BadRequest("Product not found");
         }
+        catch (Exception ex) when (ex.Message == "Not enough stock available")
+        {
+            return BadRequest("Not enough stock available");
+        }
         catch (Exception ex)
         {
             return StatusCode(500, "An error occurred while adding the item to the cart.");
