@@ -21,5 +21,28 @@
       - cart-service-db-data:/var/lib/postgresql/data
     ports:
       - "15432:5432"
+  auth-service:
+    container_name: auth-service
+    image: auth-service
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    depends_on:
+      - auth-service-db
+    ports:
+      - "8081:8081"
+  auth-service-db:
+    container_name: auth-service-db
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./auth-service/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - auth-service-db-data:/var/lib/postgresql/data
+    ports:
+      - "15433:5432"
 volumes:
   cart-service-db-data:
+  auth-service-db-data:
