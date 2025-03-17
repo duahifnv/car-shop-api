@@ -28,8 +28,18 @@ public class AuthDbContext : DbContext
             // Добавляем начальные категории
             var users = new List<User>
             {
-                new() { Username = "admin", Password = "admin", Email = "admin@mail.ru", Role = "Admin" },
-                new() { Username = "user", Password = "user", Email = "user@mail.ru", Role = "User" }
+                new() { 
+                    Username = "admin", 
+                    Password = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    Email = "admin@mail.ru",
+                    Role = "Admin" },
+                new()
+                {
+                    Username = "user",
+                    Password = BCrypt.Net.BCrypt.HashPassword("user"),
+                    Email = "user@mail.ru",
+                    Role = "User"
+                }
             };
 
             await Users.AddRangeAsync(users);
