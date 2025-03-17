@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <RootNamespace>desktop_client</RootNamespace>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Библиотеки для работы с HTTP -->
+        <PackageReference Include="System.Net.Http.Json" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        
+        <!-- Библиотеки для работы с JWT -->
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+
+        <!-- Библиотеки для WPF -->
+        <PackageReference Include="PresentationFramework" />
+        <PackageReference Include="WindowsBase" />
+
+        <!-- Библиотеки для работы с JSON -->
+        <PackageReference Include="System.Text.Json" />
+
+        <!-- Библиотеки для асинхронного программирования -->
+        <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+
+        <!-- Библиотеки для работы с исключениями -->
+        <PackageReference Include="System" />
+
+        <!-- Библиотеки для работы с данными -->
+        <PackageReference Include="System.ComponentModel" />
+
+        <!-- Библиотеки для работы с датами и временем -->
+        <PackageReference Include="System" />
+
+        <!-- Библиотеки для работы с LINQ -->
+        <PackageReference Include="System.Linq" />
+
+        <!-- Библиотеки для работы с файловой системой -->
+        <PackageReference Include="System.IO" />
+
+        <!-- Библиотеки для работы с конфигурацией -->
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+
+        <!-- Библиотеки для работы с зависимостями -->
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+
+        <!-- Библиотеки для работы с логами -->
+        <PackageReference Include="Microsoft.Extensions.Logging" />
+
+        <!-- Библиотеки для работы с аутентификацией -->
+        <PackageReference Include="Microsoft.AspNetCore.Authentication" />
+
+        <!-- Библиотеки для работы с базами данных -->
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Styles\Styles.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
+</Project>

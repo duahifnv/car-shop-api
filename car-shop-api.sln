@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "auth-service", "auth-servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api-gateway", "api-gateway\api-gateway.csproj", "{AB200047-616F-487A-A90C-B53CC20B578D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "desktop-client", "desktop-client\desktop-client.csproj", "{EA9923D8-A3A5-45CE-B736-2E11B9D6D1B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,9 @@ Global
 		{AB200047-616F-487A-A90C-B53CC20B578D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB200047-616F-487A-A90C-B53CC20B578D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB200047-616F-487A-A90C-B53CC20B578D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9923D8-A3A5-45CE-B736-2E11B9D6D1B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9923D8-A3A5-45CE-B736-2E11B9D6D1B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9923D8-A3A5-45CE-B736-2E11B9D6D1B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9923D8-A3A5-45CE-B736-2E11B9D6D1B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

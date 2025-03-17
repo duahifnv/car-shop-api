@@ -1,0 +1,13 @@
+﻿<Window x:Class="desktop_client.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Login" Height="300" Width="400">
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBox x:Name="EmailTextBox" Width="200" Margin="10"/>
+            <PasswordBox x:Name="PasswordBox" Width="200" Margin="10"/>
+            <Button Content="Login" Click="LoginButton_Click" Width="100" Margin="10"/>
+            <Button Content="Register" Click="RegisterButton_Click" Width="100" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</Window>
