@@ -12,21 +12,21 @@ public class CartRepository : ICartRepository
         _context = context;
     }
 
-    public async Task<Cart> GetCartAsync(string userEmail)
+    public async Task<Cart> GetCartAsync(string username)
     {
         var items = await _context.CartItems
             .Include(ci => ci.Product)
-            .Where(ci => ci.UserEmail == userEmail)
+            .Where(ci => ci.Username == username)
             .ToListAsync();
         
         if (items == null || !items.Any()) return null;
         
-        return new Cart { UserEmail = userEmail, Items = items };
+        return new Cart { Username = username, Items = items };
     }
 
-    public async Task AddOrUpdateItemAsync(string userEmail, CartItem item)
+    public async Task AddOrUpdateItemAsync(string username, CartItem item)
     {
-        var existingItem = await _context.CartItems.FindAsync(userEmail, item.ProductId);
+        var existingItem = await _context.CartItems.FindAsync(username, item.ProductId);
         
         if (existingItem != null)
         {
@@ -34,16 +34,16 @@ public class CartRepository : ICartRepository
         }
         else
         {
-            item.UserEmail = userEmail;
+            item.Username = username;
             await _context.CartItems.AddAsync(item);
         }
         
         await _context.SaveChangesAsync();
     }
 
-    public async Task RemoveItemAsync(string userEmail, int productId)
+    public async Task RemoveItemAsync(string username, int productId)
     {
-        var item = await _context.CartItems.FindAsync(userEmail, productId);
+        var item = await _context.CartItems.FindAsync(username, productId);
         if (item != null)
         {
             _context.CartItems.Remove(item);
@@ -51,10 +51,10 @@ public class CartRepository : ICartRepository
         }
     }
 
-    public async Task ClearCartAsync(string userEmail)
+    public async Task ClearCartAsync(string username)
     {
         var items = await _context.CartItems
-            .Where(ci => ci.UserEmail == userEmail)
+            .Where(ci => ci.Username == username)
             .ToListAsync();
             
         _context.CartItems.RemoveRange(items);
@@ -66,9 +66,9 @@ public class CartRepository : ICartRepository
         return await _context.Products.FindAsync(productId);
     }
 
-    public async Task<CartItem> GetCartItemAsync(string userEmail, int productId)
+    public async Task<CartItem> GetCartItemAsync(string username, int productId)
     {
         return await _context.CartItems
-            .FirstOrDefaultAsync(ci => ci.UserEmail == userEmail && ci.ProductId == productId);
+            .FirstOrDefaultAsync(ci => ci.Username == username && ci.ProductId == productId);
     }
 }

@@ -12,7 +12,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CartItem>()
-            .HasKey(ci => new { ci.UserEmail, ci.ProductId });
+            .HasKey(ci => new { UserEmail = ci.Username, ci.ProductId });
         modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany()

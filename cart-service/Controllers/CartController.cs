@@ -19,8 +19,8 @@ public class CartController : ControllerBase
     {
         try
         {
-            var userEmail = GetCurrentUserEmail();
-            var cart = await _service.GetCartAsync(userEmail);
+            var username = GetCurrentUsername();
+            var cart = await _service.GetCartAsync(username);
             return Ok(cart);
         }
         catch (Exception ex)
@@ -30,10 +30,10 @@ public class CartController : ControllerBase
     }
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpGet("{userEmail}")]
-    public async Task<ActionResult<CartResponse>> GetCart(string userEmail)
+    [HttpGet("{username}")]
+    public async Task<ActionResult<CartResponse>> GetCart(string username)
     {
-        var cart = await _service.GetCartAsync(userEmail);
+        var cart = await _service.GetCartAsync(username);
 
         if (cart == null)
         {
@@ -44,13 +44,13 @@ public class CartController : ControllerBase
     }
 
     [Authorize(Policy = "AdminOnly")]
-    [HttpPost("{userEmail}/items")]
-    public async Task<IActionResult> AddItem(string userEmail, [FromBody] CartItemDto cartItemDto)
+    [HttpPost("{username}/items")]
+    public async Task<IActionResult> AddItem(string username, [FromBody] CartItemDto cartItemDto)
     {
         try
         {
-            await _service.AddToCartAsync(userEmail, cartItemDto);
-            return CreatedAtAction(nameof(GetCart), new { userEmail }, cartItemDto);
+            await _service.AddToCartAsync(username, cartItemDto);
+            return CreatedAtAction(nameof(GetCart), new { username = username }, cartItemDto);
         }
         catch (Exception ex) when (ex.Message == "Product not found")
         {
@@ -71,8 +71,8 @@ public class CartController : ControllerBase
     {
         try
         {
-            var userEmail = GetCurrentUserEmail();
-            await _service.AddToCartAsync(userEmail, cartItemDto);
+            var username = GetCurrentUsername();
+            await _service.AddToCartAsync(username, cartItemDto);
             return CreatedAtAction(nameof(GetCurrentUserCart), cartItemDto);
         }
         catch (Exception ex)
@@ -82,12 +82,12 @@ public class CartController : ControllerBase
     }
     
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("{userEmail}/items/{productId:int}")]
-    public async Task<IActionResult> RemoveItem(string userEmail, int productId)
+    [HttpDelete("{username}/items/{productId:int}")]
+    public async Task<IActionResult> RemoveItem(string username, int productId)
     {
         try
         {
-            await _service.RemoveFromCartAsync(userEmail, productId);
+            await _service.RemoveFromCartAsync(username, productId);
             return NoContent();
         }
         catch (Exception ex) when (ex.Message == "Item not found")
@@ -101,12 +101,12 @@ public class CartController : ControllerBase
     }
 
     [Authorize(Policy = "AdminOnly")]
-    [HttpDelete("{userEmail}")]
-    public async Task<IActionResult> ClearCart(string userEmail)
+    [HttpDelete("{username}")]
+    public async Task<IActionResult> ClearCart(string username)
     {
         try
         {
-            await _service.ClearCartAsync(userEmail);
+            await _service.ClearCartAsync(username);
             return NoContent();
         }
         catch (Exception ex) when (ex.Message == "Cart not found")
@@ -118,13 +118,13 @@ public class CartController : ControllerBase
             return StatusCode(500, "An error occurred while clearing the cart.");
         }
     }
-    private string GetCurrentUserEmail()
+    private string GetCurrentUsername()
     {
-        var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email");
-        if (emailClaim == null)
+        var usernameClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username");
+        if (usernameClaim == null)
         {
-            throw new UnauthorizedAccessException("User email not found in token.");
+            throw new UnauthorizedAccessException("Username not found in token.");
         }
-        return emailClaim.Value;
+        return usernameClaim.Value;
     }
 }

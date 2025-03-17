@@ -2,6 +2,6 @@
 
 public class CartResponse
 {
-    public string UserEmail { get; set; }
+    public string Username { get; set; }
     public List<CartItemDto> Items { get; set; } = new();
 }
