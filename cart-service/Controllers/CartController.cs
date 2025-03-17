@@ -1,4 +1,5 @@
 ﻿using cart_service.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -11,7 +12,8 @@ public class CartController : ControllerBase
     {
         _service = service;
     }
-
+    
+    [Authorize(Policy = "AdminOnly")]
     [HttpGet("{userEmail}")]
     public async Task<ActionResult<CartResponse>> GetCart(string userEmail)
     {
@@ -25,6 +27,7 @@ public class CartController : ControllerBase
         return Ok(cart);
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("{userEmail}/items")]
     public async Task<IActionResult> AddItem(string userEmail, [FromBody] CartItemDto cartItemDto)
     {
@@ -47,6 +50,7 @@ public class CartController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{userEmail}/items/{productId:int}")]
     public async Task<IActionResult> RemoveItem(string userEmail, int productId)
     {
@@ -65,6 +69,7 @@ public class CartController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{userEmail}")]
     public async Task<IActionResult> ClearCart(string userEmail)
     {

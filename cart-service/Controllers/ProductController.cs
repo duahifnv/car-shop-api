@@ -1,8 +1,9 @@
 ﻿using cart_service.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cart/products")]
 public class ProductsController : ControllerBase
 {
     private readonly ProductService _service;
@@ -19,6 +20,7 @@ public class ProductsController : ControllerBase
         return product != null ? Ok(product) : NotFound();
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
     public async Task<IActionResult> Create(ProductRequest productRequest)
     {
@@ -37,6 +39,7 @@ public class ProductsController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, ProductRequest productRequest)
     {
@@ -59,6 +62,7 @@ public class ProductsController : ControllerBase
         }
     }
     
+    [Authorize(Policy = "AdminOnly")]
     [HttpPatch("{id:int}/stock")]
     public async Task<IActionResult> UpdateStockQuantity(int id, [FromQuery] int quantity)
     {
@@ -81,6 +85,7 @@ public class ProductsController : ControllerBase
         }
     }
     
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

@@ -1,12 +1,13 @@
 ﻿using cart_service.Dto;
 using cart_service.Models;
 using cart_service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cart_service.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cart/categories")]
 public class CategoriesController : ControllerBase
 {
     private readonly CategoryService _service;
@@ -30,6 +31,7 @@ public class CategoriesController : ControllerBase
         return category != null ? Ok(category) : NotFound();
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost]
     public async Task<IActionResult> Create(CategoryRequest categoryRequest)
     {
@@ -44,6 +46,7 @@ public class CategoriesController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, CategoryRequest categoryRequest)
     {
@@ -62,6 +65,7 @@ public class CategoriesController : ControllerBase
         }
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
