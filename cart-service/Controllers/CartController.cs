@@ -13,6 +13,22 @@ public class CartController : ControllerBase
         _service = service;
     }
     
+    [Authorize(Policy = "Authorized")]
+    [HttpGet("my")]
+    public async Task<ActionResult<CartResponse>> GetCurrentUserCart()
+    {
+        try
+        {
+            var userEmail = GetCurrentUserEmail();
+            var cart = await _service.GetCartAsync(userEmail);
+            return Ok(cart);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{userEmail}")]
     public async Task<ActionResult<CartResponse>> GetCart(string userEmail)
@@ -50,6 +66,21 @@ public class CartController : ControllerBase
         }
     }
 
+    [HttpPost("my/items")]
+    public async Task<IActionResult> AddItemToMyCart([FromBody] CartItemDto cartItemDto)
+    {
+        try
+        {
+            var userEmail = GetCurrentUserEmail();
+            await _service.AddToCartAsync(userEmail, cartItemDto);
+            return CreatedAtAction(nameof(GetCurrentUserCart), cartItemDto);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
     [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{userEmail}/items/{productId:int}")]
     public async Task<IActionResult> RemoveItem(string userEmail, int productId)
@@ -86,5 +117,14 @@ public class CartController : ControllerBase
         {
             return StatusCode(500, "An error occurred while clearing the cart.");
         }
+    }
+    private string GetCurrentUserEmail()
+    {
+        var emailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email");
+        if (emailClaim == null)
+        {
+            throw new UnauthorizedAccessException("User email not found in token.");
+        }
+        return emailClaim.Value;
     }
 }
