@@ -26,6 +26,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
@@ -38,10 +41,10 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cart Service v1");
     options.RoutePrefix = string.Empty;
 });
 
 app.MapControllers();
 
-app.Run();
+app.Run("http://*:8081");
