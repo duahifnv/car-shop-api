@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using auth_service.Data;
+using auth_service.Dtos;
 using auth_service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,8 +20,9 @@ public class JwtSettings
 
 public interface IAuthService
 {
+    Task<string> RegisterAsync(RegisterRequest request);
     Task<string> AuthenticateAsync(string username, string password);
-    Task<User> GetUserByTokenAsync(string token);
+    Task<UserResponse> GetUserByTokenAsync(string token);
 }
 
 public class AuthService : IAuthService
@@ -34,12 +36,41 @@ public class AuthService : IAuthService
         _jwtSettings = jwtSettings.Value;
     }
 
+    public async Task<string> RegisterAsync(RegisterRequest request)
+    {
+        // Проверяем, существует ли пользователь с таким же именем или email
+        var existingUser = await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == request.Username || u.Email == request.Email);
+
+        if (existingUser != null)
+        {
+            throw new Exception("Username or email already exists");
+        }
+        
+        // Создаем нового пользователя
+        var user = new User
+        {
+            Username = request.Username,
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Email = request.Email,
+            Role = request.Role
+        };
+
+        // Добавляем пользователя в базу данных
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+
+        // Генерируем JWT-токен
+        var token = GenerateJwtToken(user);
+        return token;
+    }
+    
     public async Task<string> AuthenticateAsync(string username, string password)
     {
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            .FirstOrDefaultAsync(u => u.Username == username);
 
-        if (user == null)
+        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
         {
             throw new Exception("Invalid username or password");
         }
@@ -48,7 +79,7 @@ public class AuthService : IAuthService
         return token;
     }
 
-    public async Task<User> GetUserByTokenAsync(string token)
+    public async Task<UserResponse> GetUserByTokenAsync(string token)
     {
         var handler = new JwtSecurityTokenHandler();
         var jwtToken = handler.ReadJwtToken(token);
@@ -60,8 +91,7 @@ public class AuthService : IAuthService
         {
             throw new Exception("User not found");
         }
-
-        return user;
+        return new UserResponse { Username = user.Username, Email = user.Email, Role = user.Role };
     }
 
     private string GenerateJwtToken(User user)

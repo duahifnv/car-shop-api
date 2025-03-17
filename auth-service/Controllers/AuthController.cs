@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using auth_service;
+using auth_service.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,25 @@ public class AuthController : ControllerBase
     {
         _authService = authService;
     }
-
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    {
+        try
+        {
+            var token = await _authService.RegisterAsync(request);
+            return Ok(new { Token = token });
+        }
+        catch (Exception ex) when (ex.Message == "Username or email already exists")
+        {
+            return BadRequest("Username or email already exists");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while registering the user.");
+        }
+    }
+    
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
@@ -41,13 +60,4 @@ public class AuthController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-}
-
-public class LoginRequest
-{
-    [Required]
-    public string Username { get; set; }
-
-    [Required]
-    public string Password { get; set; }
 }
