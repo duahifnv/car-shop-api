@@ -100,6 +100,38 @@ public class CartController : ControllerBase
         }
     }
 
+    // Удалить товар из корзины текущего пользователя
+    [HttpDelete("my/items/{productId}")]
+    public async Task<IActionResult> RemoveItemFromMyCart(int productId)
+    {
+        try
+        {
+            var username = GetCurrentUsername();
+            await _service.RemoveFromCartAsync(username, productId);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    // Очистить корзину текущего пользователя
+    [HttpDelete("my")]
+    public async Task<IActionResult> ClearMyCart()
+    {
+        try
+        {
+            var username = GetCurrentUsername();
+            await _service.ClearCartAsync(username);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
     [Authorize(Policy = "AdminOnly")]
     [HttpDelete("{username}")]
     public async Task<IActionResult> ClearCart(string username)
