@@ -3,6 +3,7 @@ using cart_service.Mapping;
 using cart_service.Repositories;
 using cart_service.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
@@ -21,7 +22,10 @@ builder.Services.AddScoped<CartService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cart Service API", Version = "v1" });
+});
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -41,7 +45,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cart Service v1");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Cart Service");
     options.RoutePrefix = string.Empty;
 });
 
