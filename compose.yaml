@@ -8,7 +8,7 @@
     depends_on:
       - cart-service-db
     ports:
-      - "8080:8080"
+      - "8081:8081"
   cart-service-db:
     container_name: cart-service-db
     image: postgres:17.2
@@ -30,7 +30,7 @@
     depends_on:
       - auth-service-db
     ports:
-      - "8081:8081"
+      - "8080:8080"
   auth-service-db:
     container_name: auth-service-db
     image: postgres:17.2
@@ -43,6 +43,18 @@
       - auth-service-db-data:/var/lib/postgresql/data
     ports:
       - "15433:5432"
+  api-gateway:
+    container_name: api-gateway
+    image: api-gateway
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - auth-service
+      - cart-service
+
 volumes:
   cart-service-db-data:
   auth-service-db-data:
