@@ -21,7 +21,7 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/auth/swagger/v1/swagger.json", "Auth Service");
-    options.SwaggerEndpoint("/api/cart/swagger/v1/swagger.json", "Cart Service");
+    options.SwaggerEndpoint("/cart/swagger/v1/swagger.json", "Cart Service");
     options.RoutePrefix = string.Empty;
 });
 
