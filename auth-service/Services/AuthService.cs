@@ -91,7 +91,7 @@ public class AuthService : IAuthService
         {
             throw new Exception("User not found");
         }
-        return new UserResponse { Username = user.Username, Email = user.Email, Role = user.Role };
+        return new UserResponse { Username = user.Username, Email = user.Email };
     }
 
     private string GenerateJwtToken(User user)
