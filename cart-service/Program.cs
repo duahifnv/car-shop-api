@@ -13,7 +13,7 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection"))
+        builder.Configuration.GetConnectionString("ContainerConnection"))
     );
 
 // Регистрация JWT
