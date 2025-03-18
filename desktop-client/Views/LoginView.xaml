@@ -6,11 +6,47 @@
                mc:Ignorable="d"
                d:DesignHeight="300" d:DesignWidth="400">
     <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBox x:Name="EmailTextBox" Width="200" Margin="10"/>
-            <PasswordBox x:Name="PasswordBox" Width="200" Margin="10"/>
-            <Button Content="Login" Click="LoginButton_Click" Width="100" Margin="10"/>
-            <Button Content="Register" Click="RegisterButton_Click" Width="100" Margin="10"/>
-        </StackPanel>
+        <!-- Вкладки -->
+        <TabControl Background="Transparent" BorderBrush="Transparent">
+            <!-- Вкладка Регистрации -->
+            <TabItem Header="Регистрация">
+                <Grid Margin="10">
+                    <StackPanel VerticalAlignment="Center">
+                        <!-- Поле "Имя пользователя" -->
+                        <Label Content="Имя пользователя:"/>
+                        <TextBox x:Name="RegisterUsername" Style="{StaticResource {x:Type TextBox}}" Margin="0,5,0,10"/>
+
+                        <!-- Поле "Почта" -->
+                        <Label Content="Почта:"/>
+                        <TextBox x:Name="RegisterEmail" Style="{StaticResource {x:Type TextBox}}" Margin="0,5,0,10"/>
+
+                        <!-- Поле "Пароль" -->
+                        <Label Content="Пароль:"/>
+                        <PasswordBox x:Name="RegisterPassword" Style="{StaticResource {x:Type PasswordBox}}" Margin="0,5,0,20"/>
+
+                        <!-- Кнопка "Зарегистрироваться" -->
+                        <Button Content="Зарегистрироваться" Style="{StaticResource {x:Type Button}}" Click="RegisterButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка Авторизации -->
+            <TabItem Header="Авторизация">
+                <Grid Margin="10">
+                    <StackPanel VerticalAlignment="Center">
+                        <!-- Поле "Имя пользователя" -->
+                        <Label Content="Имя пользователя:"/>
+                        <TextBox x:Name="LoginUsername" Style="{StaticResource {x:Type TextBox}}" Margin="0,5,0,10"/>
+
+                        <!-- Поле "Пароль" -->
+                        <Label Content="Пароль:"/>
+                        <PasswordBox x:Name="LoginPassword" Style="{StaticResource {x:Type PasswordBox}}" Margin="0,5,0,20"/>
+
+                        <!-- Кнопка "Войти" -->
+                        <Button Content="Войти" Style="{StaticResource {x:Type Button}}" Click="LoginButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>
