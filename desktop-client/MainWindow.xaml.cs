@@ -7,9 +7,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-        // По умолчанию показываем форму входа
-        // ShowLoginView();
+        ShowLoginView(); // По умолчанию показываем форму входа
     }
 
     // Метод для отображения формы входа
@@ -25,11 +23,11 @@ public partial class MainWindow : Window
         var adminView = new AdminView(token);
         MainContent.Content = adminView;
     }
-    //
-    // // Метод для отображения панели пользователя
-    // public void ShowUserView(string token, string userEmail)
-    // {
-    //     var userView = new UserView(token, userEmail);
-    //     MainContent.Content = userView;
-    // }
+    
+    // Метод для отображения панели пользователя
+    public void ShowUserView(string token, string userEmail)
+    {
+        var userView = new UserView(token, userEmail);
+        MainContent.Content = userView;
+    }
 }
