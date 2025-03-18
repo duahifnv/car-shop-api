@@ -11,12 +11,20 @@ public class AppDbContext : DbContext
     public DbSet<CartItem> CartItems { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CartItem>()
-            .HasKey(ci => new { UserEmail = ci.Username, ci.ProductId });
+        modelBuilder.Entity<CartItem>(entity =>
+        {
+            entity.HasKey(ci => new { Username = ci.Username, ci.ProductId });
+            entity.HasOne(p => p.Product)
+                .WithMany()
+                .HasForeignKey(p => p.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        
         modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany()
-                .HasForeignKey(p => p.CategoryId);
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
     }
 
     public async Task Initialize()
