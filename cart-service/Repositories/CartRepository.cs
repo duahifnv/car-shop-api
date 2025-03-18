@@ -19,7 +19,8 @@ public class CartRepository : ICartRepository
             .Where(ci => ci.Username == username)
             .ToListAsync();
         
-        if (items == null || !items.Any()) return null;
+        // if (items == null || !items.Any()) return null;
+        if (items == null) return null;
         
         return new Cart { Username = username, Items = items };
     }
