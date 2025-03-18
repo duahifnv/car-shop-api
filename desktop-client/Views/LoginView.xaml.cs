@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Windows;
 using System.Windows.Controls;
 using desktop_client.Services;
@@ -6,7 +7,7 @@ using desktop_client.ViewModels;
 
 namespace desktop_client.Views;
 
-public partial class LoginView
+public partial class LoginView : UserControl
 {
     private readonly MainWindow _mainWindow;
     private readonly LoginViewModel _viewModel;
@@ -29,16 +30,16 @@ public partial class LoginView
             var token = await _viewModel.LoginAsync(email, password);
 
             // Проверяем роль пользователя
-            // var role = GetRoleFromToken(token);
+            var role = GetRoleFromToken(token);
 
-            // if (role == "Admin")
-            // {
-            //     _mainWindow.ShowAdminView(token);
-            // }
-            // else
-            // {
-            //     _mainWindow.ShowUserView(token, email);
-            // }
+            if (role == "Admin")
+            {
+                _mainWindow.ShowAdminView(token);
+            }
+            else
+            {
+                _mainWindow.ShowUserView(token, email);
+            }
         }
         catch (Exception ex)
         {
@@ -62,13 +63,22 @@ public partial class LoginView
             MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-    //
-    // private string GetRoleFromToken(string token)
-    // {
-    //     // Пример извлечения роли из токена
-    //     var handler = new JwtSecurityTokenHandler();
-    //     var jwtToken = handler.ReadToken(token);
-    //     var role = jwtToken.Claims.First(claim => claim.Type == "role").Value;
-    //     return role;
-    // }
+    private static string GetRoleFromToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        // Проверяем, может ли токен быть прочитан
+        if (!handler.CanReadToken(token))
+        {
+            throw new ArgumentException("Invalid token");
+        }
+        // Читаем токен
+        var jwtToken = handler.ReadJwtToken(token);
+        // Извлекаем роль из токена
+        var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "role");
+        if (roleClaim == null)
+        {
+            throw new ArgumentException("Role claim not found in token");
+        }
+        return roleClaim.Value;
+    }
 }
