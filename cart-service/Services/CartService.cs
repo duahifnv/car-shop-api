@@ -7,11 +7,13 @@ public class CartService
 {
     private readonly ICartRepository _repository;
     private readonly IMapper _mapper;
-
-    public CartService(ICartRepository repository, IMapper mapper)
+    private readonly ILogger<CartService> _logger;
+    
+    public CartService(ICartRepository repository, IMapper mapper, ILogger<CartService> logger)
     {
         _repository = repository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<CartResponse> GetCartAsync(string username)
@@ -31,6 +33,8 @@ public class CartService
         }
         var cartItem = _mapper.Map<CartItem>(cartItemDto);
         await _repository.AddOrUpdateItemAsync(username, cartItem);
+        _logger.LogInformation("Product #{product} (x{quantity}) added to cart of user: {cart}",
+            cartItem.Product.Id, cartItem.Quantity, username);
     }
 
     public async Task RemoveFromCartAsync(string username, int productId)
@@ -39,6 +43,7 @@ public class CartService
         if (item == null) throw new Exception("Item not found");
 
         await _repository.RemoveItemAsync(username, productId);
+        _logger.LogInformation("Product #{product} removed from cart of user: {cart}", productId, username);
     }
 
     public async Task ClearCartAsync(string username)
@@ -47,5 +52,7 @@ public class CartService
         if (cart == null) throw new Exception("Cart not found");
 
         await _repository.ClearCartAsync(username);
+        _logger.LogInformation("Cart of user: {cart} cleared", username);
+
     }
 }

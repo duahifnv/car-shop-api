@@ -29,11 +29,13 @@ public class AuthService : IAuthService
 {
     private readonly AuthDbContext _context;
     private readonly JwtSettings _jwtSettings;
-
-    public AuthService(AuthDbContext context, IOptions<JwtSettings> jwtSettings)
+    private readonly ILogger<AuthService> _logger;
+    
+    public AuthService(AuthDbContext context, IOptions<JwtSettings> jwtSettings, ILogger<AuthService> logger)
     {
         _context = context;
         _jwtSettings = jwtSettings.Value;
+        _logger = logger;
     }
 
     public async Task<string> RegisterAsync(RegisterRequest request)
@@ -55,11 +57,12 @@ public class AuthService : IAuthService
             Email = request.Email,
             Role = request.Role
         };
-
+        
+        _logger.LogInformation("Created new user: '{username}'", user.Username);
         // Добавляем пользователя в базу данных
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
-
+        _logger.LogInformation("User '{username}' saved to database", user.Username);
         // Генерируем JWT-токен
         var token = GenerateJwtToken(user);
         return token;
@@ -74,7 +77,7 @@ public class AuthService : IAuthService
         {
             throw new Exception("Invalid username or password");
         }
-
+        _logger.LogInformation("User '{username}' authenticated in system", user.Username);
         var token = GenerateJwtToken(user);
         return token;
     }
@@ -113,7 +116,9 @@ public class AuthService : IAuthService
             expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
             signingCredentials: credentials
         );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        
+        var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
+        _logger.LogInformation("Generated new token: {token}..", stringToken.Substring(0, 10));
+        return stringToken;
     }
 }
