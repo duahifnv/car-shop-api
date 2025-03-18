@@ -22,7 +22,9 @@ public class CategoryRepository : ICategoryRepository
     {
         return await _context.Categories.ToListAsync();
     }
-
+    
+    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+    
     public async Task AddAsync(Category category)
     {
         await _context.Categories.AddAsync(category);
