@@ -9,7 +9,7 @@ public class ApiService
 
     public ApiService()
     {
-        _httpClient = new HttpClient { BaseAddress = new Uri("http://api-service:9000") };
+        _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:9000") };
     }
 
     public async Task<string> AuthenticateAsync(string email, string password)
