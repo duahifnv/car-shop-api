@@ -80,7 +80,6 @@ public class ProductService
 
         await _repository.DeleteAsync(id);
         await _repository.SaveChangesAsync();
-        _logger.LogInformation("Products #{product} deleted from database", product.Name);
-
+        _logger.LogInformation("Products {product} deleted from database", product.Name);
     }
 }
