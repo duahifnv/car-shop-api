@@ -11,19 +11,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <!-- Библиотеки для работы с HTTP -->
         <PackageReference Include="System.Net.Http.Json" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         
         <!-- Библиотеки для работы с JWT -->
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0"/>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.1.1" />
 
         <!-- Библиотеки для WPF -->
         <PackageReference Include="PresentationFramework" />
